@@ -1,9 +1,9 @@
 def copy():
-    fp = open("attachment.py", "r")
-    fp2 = open("copy_attachment.py", "w")
-    fp2.write(fp.read())
-    fp.close()
-    fp2.close()
+    file = open("attachment.py", "r")
+    copy_file = open("copy_attachment.py", "w")
+    copy_file.write(fp.read())
+    file.close()
+    copy_file.close()
 
 if __name__ == "__main__":
     copy()
